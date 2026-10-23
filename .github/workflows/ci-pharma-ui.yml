@@ -24,7 +24,7 @@ jobs:
   # ── 1. Lint ───────────────────────────────────────────────────────────────
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v5
 
@@ -43,7 +43,7 @@ jobs:
   # ── 2. Unit Tests with Coverage ──────────────────────────────────────────
   test:
     name: Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: lint
     steps:
       - uses: actions/checkout@v5
@@ -72,7 +72,7 @@ jobs:
   # ── 3. Code Quality & Security (SonarCloud + npm audit) ──────────────────
   sonar:
     name: Code Quality & Security
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: test
     steps:
       - uses: actions/checkout@v5
@@ -105,7 +105,7 @@ jobs:
   # ── 4. Build React App ───────────────────────────────────────────────────
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [test, sonar]
     steps:
       - uses: actions/checkout@v5
@@ -131,7 +131,7 @@ jobs:
   # ── 5. Docker Build, Trivy Scan & Push to ECR ────────────────────────────
   docker-build-push:
     name: Docker Build & Push
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     outputs:
@@ -179,7 +179,7 @@ jobs:
   deploy-dev:
     name: Deploy — DEV
     needs: docker-build-push
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: dev
     steps:
       - uses: actions/checkout@v5
